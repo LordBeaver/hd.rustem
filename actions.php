@@ -301,6 +301,7 @@ $r['p']=$row['id'];
 
 
         if ($mode == "get_client_from_new_t") {
+//if (1==1){
             if (isset($_POST['get_client_info'])) {
 
                 $client_id=($_POST['get_client_info']);
@@ -313,6 +314,7 @@ $r['p']=$row['id'];
 
             }
             if (isset($_POST['new_client_info'])) {
+//if (1==1){
                 $fio=($_POST['new_client_info']);
                 $u_l=($_POST['new_client_login']);
                 
@@ -2933,6 +2935,26 @@ values (:edit_msg, now(), :unow, :pk)');
             //$text_comment=strip_tags(xss_clean(($_POST['textmsg'])),"<b><a><br>");
 			$text_comment=$_POST['textmsg'];
 
+
+			$stmt = $dbConnection->prepare("SELECT users.fio, users.email, tickets.hash_name, tickets.subj,perf.value  FROM tickets,users,perf where tickets.id=:tid and users.id=tickets.user_init_id and perf.param='hostname'");
+			$stmt->execute(array(':tid' => $tid_comment));
+			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
+			$fio_comm=$msg_comm['fio'];
+			$hash_comm=$msg_comm['hash_name'];
+			$subj_comm=$msg_comm['subj'];
+			$email_comm=$msg_comm['email'];
+			$hostname_comm=$msg_comm['value'];
+
+$subject = lang('TICKET_name')." #".$tid_comment." (".lang('NEW_COMMENT_EMAIL').") ".$subj_comm;
+$message =<<<EOBODY
+
+В созданной Вами <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a> появился новый комментарий от пользователя $fio_comm:
+<br><br>
+$text_comment
+EOBODY;
+
+
+send_mail($email_comm,$subject,$message);
 
 
             $stmt = $dbConnection->prepare('INSERT INTO comments (t_id, user_id, comment_text, dt)

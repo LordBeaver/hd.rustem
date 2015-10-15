@@ -555,6 +555,7 @@ To do this, there is a section - Members. Locate the user that you need and chan
 'ticket_sort_ok'=>'Success tickets',
 'ticket_sort_ilock'=>'Lock by me',
 'ticket_sort_lock'=>'Lock not me',
+'NEW_COMMENT_EMAIL'=>'new comment',
 ''=>''
 );
 return isset($lang[$phrase]) ? $lang[$phrase] : 'undefined';

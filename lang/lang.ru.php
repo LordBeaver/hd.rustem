@@ -559,6 +559,7 @@ function lang($phrase){
 'ticket_sort_ok'=>'Выполненные',
 'ticket_sort_ilock'=>'Заблокированные мной',
 'ticket_sort_lock'=>'Заблокированые не мной',
+'NEW_COMMENT_EMAIL'=>'новый комментарий',
 ''=>''
 
             );

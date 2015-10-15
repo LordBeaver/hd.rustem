@@ -566,6 +566,7 @@ function lang($phrase){
 '' => '',
 '' => '',
 '' => '',
+'NEW_COMMENT_EMAIL'=>'новый комментарий',
 '' => ''
     );
     return isset($lang[$phrase]) ? $lang[$phrase] : 'undefined';
