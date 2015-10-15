@@ -7,8 +7,16 @@ if ($_SESSION['helpdesk_user_id']) {
    include("head.inc.php");
    include("navbar.inc.php");
    
-  
-//check_unlinked_file();
+
+$usid=$_SESSION['helpdesk_user_id'];
+$stmt = $dbConnection->prepare('SELECT fio, pass, login, status, priv, unit,email, lang from users where id=:usid');
+    $stmt->execute(array(':usid'=>$usid));
+    $res1 = $stmt->fetchAll(); 
+    
+    foreach($res1 as $row) {
+        $fio=$row['fio'];
+    }
+
 
 ?>
 
@@ -58,9 +66,10 @@ if (isset($_GET['ok'])) {
             <div class="col-sm-10">
 
 
-                <input  type="text" name="fio" class="form-control input-sm" id="fio" placeholder="<?=lang('NEW_fio');?>" autofocus data-toggle="popover" data-trigger="manual" data-html="true" data-placement="right" data-content="<small><?=lang('NEW_fio_desc');?></small>">
-
-
+                <input  type="text" name="fio" class="form-control input-sm" id="fio" value="<?=$fio;?>" data-toggle="popover" data-trigger="manual" data-html="true" data-placement="right" data-content="<small><?=lang('NEW_fio_desc');?></small>">
+                <script>
+                    document.getElementById("fio").focus();
+                </script>
 
             </div>
 
