@@ -177,7 +177,8 @@ function lang($phrase){
 
 
 
-'WORKER_TITLE'=>'Информация о пользователе',
+'WORKER_TITLE'=>'Заявку составил',
+'WORKER_TITLE_BLOCK'=>'Над заявкой работает',
 'WORKER_fio'=>'ФИО',
 'WORKER_login'=>'Логин',
 'WORKER_posada'=>'Должность',

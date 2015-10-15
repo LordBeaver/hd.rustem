@@ -814,7 +814,7 @@ $lo="yes";
 
             <div class="col-md-4">
                 <div class="panel panel-info">
-                    <?=get_client_info_ticket($cid)?>
+                    <?=get_client_info_ticket($cid,$tid)?>
                 </div>
             </div>
 

@@ -658,7 +658,7 @@ function get_helper() {
 
 
 
-function get_client_info_ticket($id) {
+function get_client_info_ticket($id,$tid) {
     global $dbConnection;
     $stmt = $dbConnection->prepare('SELECT fio,tel,unit_desc,adr,tel_ext,email,login,posada FROM clients where id=:id');
     $stmt->execute(array(':id' => $id));
@@ -675,6 +675,22 @@ function get_client_info_ticket($id) {
 
     $posada=$fio['posada'];
     $email=$fio['email'];
+    
+    $stmt = $dbConnection->prepare('SELECT clients.fio,clients.tel,clients.unit_desc,clients.adr,clients.tel_ext,clients.email,clients.login,clients.posada FROM clients,tickets,users where tickets.id=:tid and tickets.lock_by=users.id and users.login=clients.login');
+    $stmt->execute(array(':tid' => $tid));
+    $fio_block = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+
+    $fio_user_block=$fio_block['fio'];
+    $loginf_block=$fio_block['login'];
+    $tel_user_block=$fio_block['tel'];
+    $pod_block=$fio_block['unit_desc'];
+    $adr_block=$fio_block['adr'];
+    $tel_ext_block=$fio_block['tel_ext'];
+
+    $posada_block=$fio_block['posada'];
+    $email_block=$fio_block['email'];
 
 
     $stmt = $dbConnection->prepare('select count(id) as t1 from tickets where client_id=:id');
@@ -759,6 +775,51 @@ function get_client_info_ticket($id) {
                 
                 <?php if ($priv_val <> "1") { ?></a><?php } ?></small></td>
             </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+
+    </div>
+    
+
+     <div class="panel-heading">
+        <h4 class="panel-title"><i class="fa fa-user"></i> <?=lang('WORKER_TITLE_BLOCK');?></h4>
+    </div>
+    <div class="panel-body">
+        <h4><center><strong><?php echo $fio_user_block; ?></strong></center></h4>
+
+        <table class="table  ">
+            <tbody>
+            <?php if ($loginf) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_login');?>:</small></td>
+                    <td><small><?=$loginf_block?></small></td>
+                </tr>
+            <?php } if ($posada) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_posada');?>:</small></td>
+                    <td><small><?php echo $posada_block; ?></small></td>
+                </tr>
+            <?php } if ($pod) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_unit');?>:</small></td>
+                    <td><small><?php echo $pod_block; ?></small></td>
+                </tr>
+            <?php } if ($tel_user) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_tel');?>:</small></td>
+                    <td><small><?php echo $tel_user_block." ".$tel_ext_block; ?></small></td>
+                </tr>
+            <?php } if ($adr) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_room');?>:</small></td>
+                    <td><small><?php echo $adr_block; ?></small></td>
+                </tr>
+            <?php } if ($email) { ?>
+                <tr>
+                    <td style=" width: 30px; "><small><?=lang('WORKER_mail');?>:</small></td>
+                    <td><small><?php echo $email_block; ?></small></td>
+                </tr>
             <?php } ?>
             </tbody>
         </table>

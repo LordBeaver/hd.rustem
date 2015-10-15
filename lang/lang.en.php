@@ -187,7 +187,7 @@ function lang ($phrase) {
 ,'HELP_create' => 'Create' 
 ,'MSG_no_records' => 'No entries' 
 ,'TICKET_name' => 'Ticket' 
-
+,'WORKER_TITLE_BLOCK'=>'Ticket blocked'
 
 ,'TICKET_p_add_client'=>'Add clients',
 'TICKET_p_edit_client'=>'Edit clients'

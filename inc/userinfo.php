@@ -13,7 +13,7 @@ $priv_val=priv_status($user_ids);
 
 
 if (($priv_val=="2") || ($priv_val=="0")) {
-
+//if(1==1){
 
 ?>
 <div class="container">
@@ -30,7 +30,8 @@ if (($priv_val=="2") || ($priv_val=="0")) {
 	  
 	  
 	<?php
-	get_client_info_ticket($user_id);
+	get_client_info_ticket($user_id,0);
+//get_client_info_ticket(3);
 	?>
 	  </div>
 </div>

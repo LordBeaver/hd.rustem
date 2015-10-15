@@ -177,6 +177,7 @@ function lang($phrase){
 
 
 'WORKER_TITLE' => 'Інформація про користувача',
+'WORKER_TITLE_BLOCK'=>'Над заявкой работает',
 'WORKER_fio' => 'ПІБ',
 'WORKER_login' => 'Логін',
 'WORKER_posada' => 'Посада',
