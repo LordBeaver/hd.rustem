@@ -605,7 +605,7 @@ send_mail($to,$subject,$message);
         //while ($row = mysql_fetch_assoc($results)) {
             
         $stmt = $dbConnection->prepare('SELECT email,login from users where id=:client_id and status=:n and priv=:n1');
-		$stmt->execute(array(':n'=>'1',':client_id'=>$client_id,':n1'=>'2'));
+		$stmt->execute(array(':n'=>'1',':client_id'=>$client_id,':n1'=>'1'));
 		$res1 = $stmt->fetchAll();                 
         foreach($res1 as $row) {     
             
