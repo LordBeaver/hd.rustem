@@ -227,7 +227,7 @@ function lang($phrase){
 'TICKET_status_new'=>'новая заявка, ожидание действия',
 
 'TICKET_action_unlock'=>'Восстановить',
-'TICKET_action_lock'=>'Заблокировать',
+'TICKET_action_lock'=>'В работу',
 'TICKET_action_ok'=>'Выполнено',
 'TICKET_action_nook'=>'Не выполнено',
 'TICKET_msg_updated'=>'Заявка была обновлена​​.',
