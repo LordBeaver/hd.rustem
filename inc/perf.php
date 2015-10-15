@@ -36,10 +36,10 @@ if (validate_admin($_SESSION['helpdesk_user_id'])) {
       <div class="alert alert-warning" role="alert">
       <small>
       Coding by
-      Y.Snisar (c) 2014<br>
-      <a class="alert-link" href="https://github.com/rustem-art/hd.rustem"><i class="fa fa-github"></i> Rustem-Art on github</a><br>
-      <i class="fa fa-envelope"></i> info[at]rustem[dot]com[dot]ua<br>
-      <i class="fa fa-skype"></i> rustem_ck (only for $)
+      todeus (c) 2015<br>
+      <a class="alert-link" href="https://github.com/todeus/hd.rustem"><i class="fa fa-github"></i> todeus on github</a><br>
+      <i class="fa fa-envelope"></i> gtodeus@gmail.com<br>
+      <i class="fa fa-skype"></i> gtodeus
       </ul>
       </small>
       </div>
