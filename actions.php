@@ -1,5 +1,4 @@
 <?php
-	//test commit from Coda2
 session_start();
 include("functions.inc.php");
 if ( isset($_POST['mode']) ) {
