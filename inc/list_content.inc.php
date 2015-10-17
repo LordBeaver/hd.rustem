@@ -47,8 +47,24 @@ if (isset($_SESSION['hd.rustem_sort_out'])) {
 
 if (!isset($_SESSION['hd.rustem_sort_out'])) {        
 
+if($priv_val<>0){
 		$stmt = $dbConnection->prepare('SELECT id, user_init_id, user_to_id, date_create, subj, msg, client_id, unit_id, status, hash_name, is_read,lock_by, ok_by, prio from tickets where user_init_id=:user_id and arch=:n order by id desc limit :start_pos, :perpage');
         $stmt->execute(array(':user_id' => $user_id, ':n'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage));
+	} else {
+		$stmt = $dbConnection->prepare('select id from users where unit=:unit');
+		$stmt->execute(array(':unit'=>'14'));
+		$r = $stmt->fetchAll();
+		$query_arr = "";
+		foreach($r as $row)
+		{
+			$query_arr.= "user_init_id=".$row['id']." or ";
+		}
+
+		$query = 'SELECT id, user_init_id, user_to_id, date_create, subj, msg, client_id, unit_id, status, hash_name, is_read,lock_by, ok_by, prio from tickets where ('.$query_arr.' false) and arch=:n order by id desc limit :start_pos, :perpage';
+		$stmt = $dbConnection->prepare($query);
+        $stmt->execute(array(':n'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage));
+	}
+
         }
 
 
