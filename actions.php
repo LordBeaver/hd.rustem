@@ -2935,32 +2935,47 @@ values (:edit_msg, now(), :unow, :pk)');
             //$text_comment=strip_tags(xss_clean(($_POST['textmsg'])),"<b><a><br>");
 			$text_comment=$_POST['textmsg'];
 
-
-			$stmt = $dbConnection->prepare("SELECT users.email, tickets.hash_name, tickets.subj,perf.value  FROM tickets,users,perf where tickets.id=:tid and users.id=tickets.user_init_id and perf.param='hostname'");
+//Автор
+			$stmt = $dbConnection->prepare("SELECT users.id,users.email, tickets.hash_name, tickets.subj,perf.value  FROM tickets,users,perf where tickets.id=:tid and users.id=tickets.user_init_id and perf.param='hostname'");
 			$stmt->execute(array(':tid' => $tid_comment));
 			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
 			$hash_comm=$msg_comm['hash_name'];
+			$from_user_id=$msg_comm['id'];
 			$subj_comm=$msg_comm['subj'];
-			$email_comm=$msg_comm['email'];
+			$email_comm_from=$msg_comm['email'];
 			$hostname_comm=$msg_comm['value'];
-			
+//Комментатор			
 			$stmt = $dbConnection->prepare("SELECT fio  FROM tickets,users where tickets.id=:tid and users.id=:uid");
 			$stmt->execute(array(':tid' => $tid_comment, ':uid' => $user_comment));
 			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
 			$fio_comm=$msg_comm['fio'];
-			
-			
+//Исполнитель
+			$stmt = $dbConnection->prepare("SELECT users.id,email  FROM tickets,users where tickets.id=:tid and users.id=tickets.user_to_id");
+			$stmt->execute(array(':tid' => $tid_comment));
+			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
+			$email_comm_to=$msg_comm['email'];
+			$to_user_id=$msg_comm['id'];			
 
 $subject = lang('TICKET_name')." #".$tid_comment." (".lang('NEW_COMMENT_EMAIL').") ".$subj_comm;
-$message =<<<EOBODY
 
+$message_from =<<<EOBODY
 В созданной Вами <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a> появился новый комментарий от пользователя $fio_comm:
 <br><br>
 $text_comment
 EOBODY;
 
 
-send_mail($email_comm,$subject,$message);
+$message_to =<<<EOBODY
+В <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a>, в которой вы отмечены как Исполнитель, появился новый комментарий от пользователя $fio_comm:
+<br><br>
+$text_comment
+EOBODY;
+
+if($user_comment<>$to_user_id) {
+	send_mail($email_comm_to,$subject,$message_to);
+} else if($user_comment<>$from_user_id) {
+	send_mail($email_comm_from,$subject,$message_from);
+}
 
 
             $stmt = $dbConnection->prepare('INSERT INTO comments (t_id, user_id, comment_text, dt)
