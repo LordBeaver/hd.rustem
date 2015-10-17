@@ -2619,7 +2619,6 @@ values (:no_ok, now(), :unow, :tid)');
             $ps=priv_status($lb);
 
 
-
             if ($lb == "0") {
 
 
@@ -2632,6 +2631,25 @@ values (:no_ok, now(), :unow, :tid)');
                 $stmt = $dbConnection->prepare('INSERT INTO ticket_log (msg, date_op, init_user_id, ticket_id)
 values (:lock, now(), :unow, :tid)');
                 $stmt->execute(array(':tid' => $tid, ':unow'=>$unow, ':lock'=>'lock'));
+
+				$stmt = $dbConnection->prepare('SELECT subj,hash_name,user_init_id from tickets where id=:id');
+				$stmt->execute(array(':id' => $tid));
+				$res1 = $stmt->fetchAll();
+				foreach($res1 as $row) {
+					$subj = $row['subj'];
+					$hash_name = $row['hash_name'];
+					$user_init = $row['user_init_id'];
+				}
+                $subject = "Заявка #".$tid." (начало работы) ".$subj;
+				$message_to = "Пользователь ".name_of_user_ret($user)." приступил к выполнению <a href='".$CONF['hostname']."/ticket?".$hash_name."'>Заявки #".$tid."</a>";
+				$stmt = $dbConnection->prepare('SELECT email from users where id=:id');
+				$stmt->execute(array(':id' => $user_init));
+				$res2 = $stmt->fetchAll();
+				foreach($res2 as $row) {
+					$email = $row['email'];
+				}
+				send_mail($email,$subject,$message_to);
+
                 ?>
 
                 <div class="alert alert-success"><i class="fa fa-check"></i> <?=lang('TICKET_msg_lock');?></div>

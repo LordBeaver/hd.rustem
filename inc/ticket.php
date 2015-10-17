@@ -36,11 +36,10 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
             $cid=$row['client_id'];
             $tid=$row['id'];
             $arch=$row['arch'];
+            
+            
 
             $status_ok=$row['status'];
-
-
-
 
 
             if ($arch == 1) {$st= "<span class=\"label label-default\"><i class=\"fa fa-archive\"></i> ".lang('TICKET_status_arch')."</span>";}
@@ -75,7 +74,26 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
 
 
 
-            if ($row['is_read'] == "0") {
+            if ((($row['is_read'] == "0")&&($row['user_to_id'] == $_SESSION['helpdesk_user_id']))||($row['user_to_id'] == 0)) {
+
+            if($lock_by=="0"){
+				if($row['user_to_id'] == $_SESSION['helpdesk_user_id']){
+					$stmt = $dbConnection->prepare('update tickets set lock_by=:user, last_update=now() where id=:tid');
+					$stmt->execute(array(':tid' => $tid, ':user'=> $_SESSION['helpdesk_user_id']));
+					$unow=$_SESSION['helpdesk_user_id'];
+					$stmt = $dbConnection->prepare('INSERT INTO ticket_log (msg, date_op, init_user_id, ticket_id)
+values (:lock, now(), :unow, :tid)');
+                	$stmt->execute(array(':tid' => $tid, ':unow'=>$unow, ':lock'=>'lock'));
+					$lock_by = $unow;
+					$subject = "Заявка #".$tid." (начало работы) ".$row['subj'];
+					$message_to = "Пользователь ".name_of_user_ret($unow)." приступил к выполнению <a href='".$CONF['hostname']."/ticket?".$row['hash_name']."'>Заявки #".$tid."</a>";
+					$stmt = $dbConnection->prepare('SELECT email from users where id=:id');
+					$stmt->execute(array(':id' => $row['user_init_id']));
+					$row1 = $stmt->fetch(PDO::FETCH_NUM);
+					$email = $row1[0];
+					send_mail($email,$subject,$message_to);
+				}
+			}
 
 
                 $res = $dbConnection->prepare("update tickets set is_read=:n where id=:tid");
@@ -103,6 +121,8 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
 
             }
             if ($lock_by == "0") {
+	            
+	    			    			
 
                 $lock_text="<i class=\"fa fa-lock\"></i> ".lang('TICKET_action_lock')."";
                 $lock_status="lock";
@@ -848,6 +868,8 @@ $lo="yes";
 
 
     <?php
+	    
+	    
     include("footer.inc.php");
 }
 else {
