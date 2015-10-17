@@ -2971,11 +2971,11 @@ $message_to =<<<EOBODY
 $text_comment
 EOBODY;
 
-if($user_comment<>$to_user_id) {
+if($user_comment<>$to_user_id)
 	send_mail($email_comm_to,$subject,$message_to);
-} else if($user_comment<>$from_user_id) {
+
+if($user_comment<>$from_user_id)
 	send_mail($email_comm_from,$subject,$message_from);
-}
 
 
             $stmt = $dbConnection->prepare('INSERT INTO comments (t_id, user_id, comment_text, dt)
