@@ -2950,7 +2950,7 @@ values (:edit_msg, now(), :unow, :pk)');
 			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
 			$fio_comm=$msg_comm['fio'];
 //Исполнитель
-			$stmt = $dbConnection->prepare("SELECT users.id,email  FROM tickets,users where tickets.id=:tid and users.id=tickets.user_to_id");
+			$stmt = $dbConnection->prepare("SELECT users.id,email  FROM tickets,users where tickets.id=:tid and users.id=tickets.lock_by");
 			$stmt->execute(array(':tid' => $tid_comment));
 			$msg_comm = $stmt->fetch(PDO::FETCH_ASSOC);
 			$email_comm_to=$msg_comm['email'];
@@ -2966,7 +2966,7 @@ EOBODY;
 
 
 $message_to =<<<EOBODY
-В <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a>, в которой вы отмечены как Исполнитель, появился новый комментарий от пользователя $fio_comm:
+В <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a>, над которой вы работаете, появился новый комментарий от пользователя $fio_comm:
 <br><br>
 $text_comment
 EOBODY;
