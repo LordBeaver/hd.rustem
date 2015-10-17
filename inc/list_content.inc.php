@@ -632,14 +632,42 @@ if (isset($_SESSION['hd.rustem_sort_in'])) {
 }
 
 if (!isset($_SESSION['hd.rustem_sort_in'])) {
-	$stmt = $dbConnection->prepare('SELECT 
+	$stmt = $dbConnection->prepare('(select
+	tickets.id,
+	tickets.user_init_id,
+	tickets.user_to_id,
+	tickets.date_create,
+	tickets.subj,
+	tickets.msg,
+	tickets.client_id,
+	tickets.unit_id,
+	tickets.status,
+	tickets.hash_name,
+	tickets.is_read,
+	tickets.lock_by,
+	tickets.ok_by,
+	tickets.prio, 
+	tickets.last_update
+from
+	users,
+	tickets,
+	ticket_log
+where 
+	arch=:n0
+and
+	(ticket_log.to_user_id=:user_id1 or ticket_log.init_user_id=:user_id2)
+and
+	users.id=:user_id3
+and
+	ticket_log.ticket_id=tickets.id
+) UNION (SELECT 
 							id, user_init_id, user_to_id, date_create, subj, msg, client_id, unit_id, status, hash_name, is_read, lock_by, ok_by, prio, last_update
 							from tickets
-							where unit_id IN (' . $in_query . ')  and arch=:n
+							where unit_id IN (' . $in_query . ')  and arch=:n)
 							order by ok_by asc, prio desc, id desc
 							limit :start_pos, :perpage');
 
-            $paramss=array(':n'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage);
+            $paramss=array(':n'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage,':n0' => '0',':user_id1' => $user_id, ':user_id2' => $user_id, ':user_id3' => $user_id);
             $stmt->execute(array_merge($vv,$paramss));
 }
             
@@ -700,14 +728,43 @@ $stmt->execute(array_merge($vv,$paramss));
 
 
 if (!isset($_SESSION['hd.rustem_sort_in'])) {
-$stmt = $dbConnection->prepare('SELECT 
+$stmt = $dbConnection->prepare('(select
+	tickets.id,
+	tickets.user_init_id,
+	tickets.user_to_id,
+	tickets.date_create,
+	tickets.subj,
+	tickets.msg,
+	tickets.client_id,
+	tickets.unit_id,
+	tickets.status,
+	tickets.hash_name,
+	tickets.is_read,
+	tickets.lock_by,
+	tickets.ok_by,
+	tickets.prio, 
+	tickets.last_update
+from
+	users,
+	tickets,
+	ticket_log
+where 
+	arch=:n0
+and
+	(ticket_log.to_user_id=:user_id1 or ticket_log.init_user_id=:user_id2)
+and
+	users.id=:user_id3
+and
+	ticket_log.ticket_id=tickets.id
+) UNION (SELECT 
 							id, user_init_id, user_to_id, date_create, subj, msg, client_id, unit_id, status, hash_name, is_read, lock_by, ok_by, prio, last_update
 							from tickets
 							where ((user_to_id=:user_id and arch=:n) or
-							(user_to_id=:n1 and unit_id IN (' . $in_query . ') and arch=:n2))
+							(user_to_id=:n1 and unit_id IN (' . $in_query . ') and arch=:n2)))
 							order by ok_by asc, prio desc, id desc
 							limit :start_pos, :perpage');
-$paramss=array(':user_id'=>$user_id, ':n'=>'0',':n1'=>'0',':n2'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage);
+$paramss=array(':user_id'=>$user_id, ':n'=>'0',':n1'=>'0',':n2'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage,':n0' => '0',':user_id1' => $user_id, ':user_id2' => $user_id, ':user_id3' => $user_id);
+
 $stmt->execute(array_merge($vv,$paramss));
             }
             
