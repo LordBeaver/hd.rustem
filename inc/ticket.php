@@ -554,7 +554,7 @@ $lo="yes";
                     <div class="btn-group">
                         <button <?=$lock_disabled?> id="action_lock" status="<?=$lock_status?>" value="<?=$_SESSION['helpdesk_user_id']?>" tid="<?=$tid?>" type="button" class="btn btn btn-danger"> <?=$lock_text?></button>
                     </div><div class="btn-group">
-                        <button <?=$lock_disabled?> id="action_ok" status="<?=$status_ok_status?>" value="<?=$_SESSION['helpdesk_user_id']?>" tid="<?=$tid?>" type="button" class="btn btn btn-danger"><?=$status_ok_text?> </button>
+                        <button <?=$lock_disabled?> id="action_ok" title="<?=name_of_user($row['user_init_id']);?> получит уведомление о завершении заявки." data-toggle="tooltip" data-placement="top" status="<?=$status_ok_status?>" value="<?=$_SESSION['helpdesk_user_id']?>" tid="<?=$tid?>" type="button" class="btn btn btn-danger"><?=$status_ok_text?> </button>
                     </div>
                 </div>
                 </center>
@@ -789,6 +789,7 @@ $lo="yes";
 
                                                 </div>
 
+
                                                 
                                                 <div class="col-sm-12" style=""><button id="do_comment"  user="<?=$_SESSION['helpdesk_user_id']?>" value="<?=$tid?>" type="button" class="btn btn-default btn-sm pull-right"><?=lang('TICKET_t_send');?> (ctrl+enter)</button></div>
 
@@ -848,7 +849,6 @@ $lo="yes";
 
     <?php
     include("footer.inc.php");
-
 }
 else {
     include 'auth.php';
