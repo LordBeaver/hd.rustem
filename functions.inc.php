@@ -442,7 +442,7 @@ function view_comment($tid) {
                                         <time id="b" datetime="<?=$rews['dt'];?>"></time> <time id="c" datetime="<?=$rews['dt'];?>"></time></small>
                                         
                                 </div><br>
-                    <p><?=make_html($rews['comment_text'], true); ?></p>
+                    <?=make_html($rews['comment_text'], true); ?>
                 </div>
             </div>
 
@@ -2324,6 +2324,21 @@ function name_of_user($input) {
 
     echo($fio['fio']);
 }
+
+function get_unit_by_id_ret($input)
+{
+    global $dbConnection;
+
+
+    $stmt = $dbConnection->prepare('SELECT unit FROM users where id=:input');
+    $stmt->execute(array(':input' => $input));
+    $unit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    return($unit['unit']);
+
+}
+
 
 function name_of_user_ret($input) {
     global $dbConnection;

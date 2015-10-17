@@ -52,7 +52,8 @@ if($priv_val<>0){
         $stmt->execute(array(':user_id' => $user_id, ':n'=>'0',':start_pos'=>$start_pos,':perpage'=>$perpage));
 	} else {
 		$stmt = $dbConnection->prepare('select id from users where unit=:unit');
-		$stmt->execute(array(':unit'=>'14'));
+		$unit = get_unit_by_id_ret($user_id);
+		$stmt->execute(array(':unit'=>$unit));
 		$r = $stmt->fetchAll();
 		$query_arr = "";
 		foreach($r as $row)
