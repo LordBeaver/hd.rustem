@@ -2530,6 +2530,25 @@ values (:ar, now(), :unow, :tid)');
             (msg, date_op, init_user_id, ticket_id)
 			values (:ok, now(), :unow, :tid)');
                 $stmt->execute(array(':ok'=>'ok',':tid' => $tid,':unow'=>$unow));
+                
+                
+                $stmt = $dbConnection->prepare('SELECT subj,hash_name,user_init_id from tickets where id=:id');
+				$stmt->execute(array(':id' => $tid));
+				$res1 = $stmt->fetchAll();
+				foreach($res1 as $row) {
+					$subj = $row['subj'];
+					$hash_name = $row['hash_name'];
+					$user_init = $row['user_init_id'];
+				}
+                $subject = "Заявка #".$tid." (Выполнена) ".$subj;
+				$message_to = "Пользователь ".name_of_user_ret($unow)." выполнил <a href='".$CONF['hostname']."/ticket?".$hash_name."'>Заявку #".$tid."</a>";
+				$stmt = $dbConnection->prepare('SELECT email from users where id=:id');
+				$stmt->execute(array(':id' => $user_init));
+				$res2 = $stmt->fetchAll();
+				foreach($res2 as $row) {
+					$email = $row['email'];
+				}
+				send_mail($email,$subject,$message_to);
 
                 ?>
 
