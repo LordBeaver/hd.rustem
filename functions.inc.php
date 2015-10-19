@@ -2114,12 +2114,35 @@ if (isset($_SESSION['hd.rustem_list_out'])) {
 	}
 }
 
-if (!isset($_SESSION['hd.rustem_sort_out'])) {        
+if (!isset($_SESSION['hd.rustem_sort_out'])) {    
+	
+	if($priv_val<>0){
 
 		$res = $dbConnection->prepare("SELECT count(*) from tickets where user_init_id=:id and arch='0'");
         $res->execute(array(':id' => $id));
         $count = $res->fetch(PDO::FETCH_NUM);
-        $count=$count[0];}
+        $count=$count[0];
+   	} else {
+		$unit = get_unit_by_id_ret($id);
+		$stmt = $dbConnection->prepare('select id from users where unit like \'%'.$unit.'%\'');
+		$stmt->execute();
+		$r = $stmt->fetchAll();
+		$query_arr = "";
+		foreach($r as $row)
+		{
+			$query_arr.= "user_init_id=".$row['id']." or ";
+		}
+
+		$query = 'SELECT count(*) from tickets where ('.$query_arr.' false) and arch=\'0\'';
+		$stmt = $dbConnection->prepare($query);
+        $stmt->execute();
+        $count = $stmt->fetch(PDO::FETCH_NUM);
+        $count=$count[0];
+
+	}
+    
+
+        }
 
 
 
