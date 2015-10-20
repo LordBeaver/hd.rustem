@@ -19,7 +19,7 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
     $stmt = $dbConnection->prepare('SELECT 
 							id, user_init_id, user_to_id, date_create, subj, msg, client_id, unit_id, status, hash_name, comment, last_edit, is_read, lock_by, ok_by, arch, ok_date, prio, last_update
 							from tickets
-							where hash_name=:hn');
+							where hash_name=:hn and subj not like \'%[Слияние]%\'');
     $stmt->execute(array(':hn'=>$hn));
     $res1 = $stmt->fetchAll();
     if (!empty($res1)) {
