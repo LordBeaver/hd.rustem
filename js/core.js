@@ -2735,7 +2735,54 @@ $('a#edit_deps').each(function(i, e) {
 
 
 
+    $('body').on('click', 'button#action_connect', function(event) {
+        event.preventDefault();
+        var status_lock=$("button#action_connect").attr('status');
+        var ok_val=$("button#action_ok").attr("value");
+        var ok_val_tid=$("button#action_ok").attr("tid");
+        var lang_connect= get_lang_param('JS_connect');
+        if (status_lock == 'connect') {
+            $("button#action_connect").attr('status', "unconnect").html("<i class=\"fa fa-pencil\"></i> "+lang_connect);
+            $.ajax({
+                type: "POST",
+                url: ACTIONPATH,
+                data: "mode=status_connect"+
+                    "&tid="+ok_val_tid+
+                    "&user="+encodeURIComponent(ok_val),
+                success: function(html){
 
+
+                    $("#msg").hide().html(html).fadeIn(500);
+                    setTimeout(function() {$('#msg').children('.alert').fadeOut(500);}, 3000);
+
+
+                }
+            });
+        }
+        if (status_lock == 'unconnect') {
+            var lang_unconnect= get_lang_param('JS_unconnect');
+            $("button#action_connect").attr('status', "connect").html("<i class=\"fa fa-pencil\"></i> "+lang_unconnect);
+            $.ajax({
+                type: "POST",
+                url: ACTIONPATH,
+                data: "mode=status_unconnect"+
+                    "&tid="+ok_val_tid+
+                    "&user="+encodeURIComponent(ok_val),
+                success: function(html){
+
+
+                    $("#msg").hide().html(html).fadeIn(500);
+                    setTimeout(function() {$('#msg').children('.alert').fadeOut(500);}, 3000);
+
+
+                }
+            });
+
+        }
+
+
+
+    });
 
     $('body').on('click', 'button#action_ok', function(event) {
         event.preventDefault();

@@ -313,6 +313,7 @@ function lang ($phrase) {
 ,'upload_not_u' => 'You are not upload some files'
 
 ,'TICKET_ACTION_refer' => 'redirect the user' 
+,'TICKET_ACTION_connect'=>'начал отслеживать заявку'
 ,'TICKET_ACTION_refer_to' => 'on' 
 ,'TICKET_ACTION_ok' => 'performed by the user' 
 ,'TICKET_ACTION_nook' => 'not performed by the user' 
@@ -327,6 +328,7 @@ function lang ($phrase) {
 ,'HELPER_title' => 'Knowledge Centre' 
 ,'HELPER_back' => 'back'
 ,'HELPER_print'=>'print'
+,'HELPER_connect'=>'подписаться'
 ,'HELPER_pub' => 'Published' 
 ,'HELPER_date' => 'Date' 
 ,'HELPER_find' => 'Find' 
@@ -369,6 +371,8 @@ function lang ($phrase) {
 ,'JS_probl' => 'Please fill in the description of the problem' 
 ,'JS_ok' => 'Done' 
 ,'JS_no_ok' => 'not satisfied' 
+,'JS_connect'=>'подписаться'
+,'JS_unconnect'=>'отписаться'
 ,'JS_unlock' => 'Restore' 
 ,'JS_lock' => 'Block' 
 

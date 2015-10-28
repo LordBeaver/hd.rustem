@@ -40,6 +40,16 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
             
 
             $status_ok=$row['status'];
+            
+            $uid = $_SESSION['helpdesk_user_id'];
+            $stmt = $dbConnection->prepare('select * from ticket_log where msg=\'connect\' and init_user_id=:uid and ticket_id=:tid');
+$stmt->execute(array(':tid'=>$tid, ':uid'=>$uid));
+$re = $stmt->fetchAll();
+			if(!empty($re)) {
+            	$status_connect = 1;
+            } else {
+	            $status_connect = 0;
+            }
 
 
             if ($arch == 1) {$st= "<span class=\"label label-default\"><i class=\"fa fa-archive\"></i> ".lang('TICKET_status_arch')."</span>";}
@@ -139,6 +149,17 @@ values (:lock, now(), :unow, :tid)');
                 $status_ok_text="<i class=\"fa fa-check\"></i> ".lang('TICKET_action_ok')."";
                 $status_ok_status="no_ok";
             }
+            
+            if ($status_connect == "1") {
+                $status_connect_text=lang('JS_unconnect');
+                $status_connect_status="connect";
+
+            }
+
+            if ($status_connect == "0") {
+                $status_connect_text=lang('JS_connect');
+                $status_connect_status="unconnect";
+            }
 
 
 
@@ -187,6 +208,8 @@ values (:lock, now(), :unow, :tid)');
             <h3 class="panel-title"style="display:inline;"><i class="fa fa-ticket"></i> <?=lang('TICKET_name');?> <strong>#<?=$row['id']?></strong></h3>
     		</td>
     		<td style="width:600px;text-align:right;">
+	    		<button id="action_connect" status="<?=$status_connect_status?>" value="<?=$_SESSION['helpdesk_user_id']?>" tid="<?=$tid?>" type="button" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i><?=$status_connect_text?> </button>
+	    		
    	<button id="print_now" href="print_ticket?<?php echo $row['hash_name']; ?>"target="_blank" class="btn btn-default btn-xs"><i class="fa fa-print"></i> <?=lang('HELPER_print');?></button>
    	<?php     if (($inituserid_flag == 1) && ($arch == 0)) { ?>
 <button class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#myModal">

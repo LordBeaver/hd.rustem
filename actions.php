@@ -2603,6 +2603,17 @@ values (:ar, now(), :unow, :tid)');
 					$email = $row['email'];
 				}
 				send_mail($email,$subject,$message_to);
+				
+				//Рассылка подписчикам
+$stmt = $dbConnection->prepare('select users.email,users.id from users,ticket_log where ticket_log.msg=\'connect\' and ticket_log.init_user_id=users.id and ticket_log.ticket_id=:tid');
+$stmt->execute(array(':tid'=>$tid));
+$re = $stmt->fetchAll();
+if(!empty($re)) {
+	foreach($re as $row) {
+		if($user_comment<>$row['id'])
+			send_mail($row['email'],$subject,$message_to);
+	}
+}
 
                 ?>
 
@@ -2676,7 +2687,28 @@ values (:no_ok, now(), :unow, :tid)');
 
 
         }
-
+        
+        if ($mode == "status_connect") {
+            $user=($_POST['user']);
+            $tid=($_POST['tid']);
+            $stmt = $dbConnection->prepare('delete from ticket_log where msg=:unconnect and init_user_id=:unow and ticket_id=:tid');
+            $stmt->execute(array(':tid' => $tid, ':unow'=>$user,':unconnect'=>'connect'));
+            ?>
+                <div class="alert alert-success">DONE!</div>
+            <?php
+        }
+                
+        if ($mode == "status_unconnect") {
+            $user=($_POST['user']);
+            $tid=($_POST['tid']);
+            $stmt = $dbConnection->prepare('INSERT INTO ticket_log (msg, date_op, init_user_id, ticket_id)
+values (:connect, now(), :unow, :tid)');
+            $stmt->execute(array(':tid' => $tid, ':unow'=>$user,':connect'=>'connect'));
+            ?>
+                <div class="alert alert-success">DONE!</div>
+            <?php
+        }
+            
         if ($mode == "lock") {
             $user=($_POST['user']);
             $tid=($_POST['tid']);
@@ -3023,7 +3055,6 @@ values (:edit_msg, now(), :unow, :pk)');
 
             $user_comment=($_POST['user']);
             $tid_comment=($_POST['tid']);
-            //$text_comment=strip_tags(xss_clean(($_POST['textmsg'])),"<b><a><br>");
 			$text_comment=$_POST['textmsg'];
 
 //Автор
@@ -3062,12 +3093,29 @@ $message_to =<<<EOBODY
 $text_comment
 EOBODY;
 
+$message_to_connect =<<<EOBODY
+В <a href=$hostname_comm/ticket?$hash_comm>Заявке #$tid_comment</a>, на которую вы подписаны, появился новый комментарий от пользователя $fio_comm:
+<br><br>
+$text_comment
+EOBODY;
+
 if($user_comment<>$to_user_id)
 	send_mail($email_comm_to,$subject,$message_to);
 
 if($user_comment<>$from_user_id)
 	send_mail($email_comm_from,$subject,$message_from);
-
+	
+	
+//Рассылка подписчикам
+$stmt = $dbConnection->prepare('select users.email,users.id from users,ticket_log where ticket_log.msg=\'connect\' and ticket_log.init_user_id=users.id and ticket_log.ticket_id=:tid');
+$stmt->execute(array(':tid'=>$tid_comment));
+$re = $stmt->fetchAll();
+if(!empty($re)) {
+	foreach($re as $row) {
+		if($user_comment<>$row['id'])
+			send_mail($row['email'],$subject,$message_to_connect);
+	}
+}
 
             $stmt = $dbConnection->prepare('INSERT INTO comments (t_id, user_id, comment_text, dt)
 values (:tid_comment, :user_comment, :text_comment, now())');

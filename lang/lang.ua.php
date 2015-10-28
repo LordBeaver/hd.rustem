@@ -299,6 +299,7 @@ function lang($phrase){
 
 
 'TICKET_ACTION_refer' => 'переадресовано користувачем',
+'TICKET_ACTION_connect'=>'начал отслеживать заявку',
 'TICKET_ACTION_refer_to' => 'на',
 'TICKET_ACTION_ok' => 'виконано користувачем',
 'TICKET_ACTION_nook' => 'не виконано користувачем',
@@ -314,6 +315,7 @@ function lang($phrase){
 'HELPER_title' => 'Центр знань',
 'HELPER_back' => 'назад',
 'HELPER_print'=>'роздрукувати',
+'HELPER_connect'=>'подписаться',
 'HELPER_pub' => 'Опублікував',
 'HELPER_date' => 'Дата',
 'HELPER_find' => 'Знайти',
@@ -356,6 +358,8 @@ function lang($phrase){
 'JS_probl' => 'Заповніть поле опис проблеми',
 'JS_ok' => 'Виконано',
 'JS_no_ok' => 'Не виконано',
+'JS_connect'=>'подписаться',
+'JS_unconnect'=>'отписаться',
 'JS_unlock' => 'Розблокувати',
 'JS_lock' => 'Заблокувати',
 
