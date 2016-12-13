@@ -100,6 +100,7 @@ $priv_val = priv_status($_SESSION['helpdesk_user_id']);
                             <li <?=echoActiveClassIfRequestMatches("posada")?> ><a href="<?=$CONF['hostname']?>posada"><i class="fa fa-male"></i> <?=lang('NAVBAR_posads');?></a></li>
                             <li <?=echoActiveClassIfRequestMatches("units")?>><a href="<?=$CONF['hostname']?>units"><i class="fa fa-building-o"></i> <?=lang('NAVBAR_units');?></a></li>
                             <li <?=echoActiveClassIfRequestMatches("subj")?>><a href="<?=$CONF['hostname']?>subj"><i class="fa fa-tags"></i> <?=lang('NAVBAR_subjs');?></a></li>
+                            <li <?=echoActiveClassIfRequestMatches("users")?>><a href="<?=$CONF['hostname']?>integration/LDAP-import_clients/" target="_blank"><i class="fa fa-users"></i> <?=lang('NAVBAR_import');?></a></li>
                         </ul>
                     </li>
 
