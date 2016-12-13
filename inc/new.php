@@ -6,35 +6,18 @@ if (validate_user($_SESSION['helpdesk_user_id'], $_SESSION['code'])) {
 if ($_SESSION['helpdesk_user_id']) {
    include("head.inc.php");
    include("navbar.inc.php");
-   
-
-$usid=$_SESSION['helpdesk_user_id'];
-$stmt = $dbConnection->prepare('SELECT fio, pass, login, status, priv, unit,email, lang from users where id=:usid');
-    $stmt->execute(array(':usid'=>$usid));
-    $res1 = $stmt->fetchAll(); 
-    
-    foreach($res1 as $row) {
-        $fio=$row['fio'];
-    }
-
-
 ?>
-
-
 
 <div class="container" id="form_add">
 <input type="hidden" id="main_last_new_ticket" value="<?=get_last_ticket_new($_SESSION['helpdesk_user_id']);?>">
-
 
 <div class="row" style="padding-bottom:20px;">
 
     <div class="col-md-8"> <center><h3><i class="fa fa-tag"></i> <?=lang('NEW_title');?></h3></center></div>
 
-
 </div>
 
 <div class="row" style="padding-bottom:20px;">
-
 
 <div class="col-md-8" id="div_new">
 <?php
@@ -56,7 +39,6 @@ if (isset($_GET['ok'])) {
 
 <div class="form-horizontal" id="main_form" novalidate="" action="" method="post">
 
-
 <div class="control-group">
     <div class="controls">
         <div class="form-group" id="for_fio">
@@ -64,16 +46,8 @@ if (isset($_GET['ok'])) {
             <label for="fio" class="col-sm-2 control-label" data-toggle="tooltip" data-placement="top" title="<?=lang('NEW_from_desc');?>"><small><?=lang('NEW_from');?>: </small></label>
 
             <div class="col-sm-10">
-
-
-                <input  type="text" name="fio" class="form-control input-sm" id="fio" value="<?=$fio;?>" data-toggle="popover" data-trigger="manual" data-html="true" data-placement="right" data-content="<small><?=lang('NEW_fio_desc');?></small>">
-                <script>
-                    document.getElementById("fio").focus();
-                </script>
-
+                <input  type="text" name="fio" class="form-control input-sm" id="fio" placeholder="<?=lang('NEW_fio');?>" autofocus data-toggle="popover" data-trigger="manual" data-html="true" data-placement="right" data-content="<small><?=lang('NEW_fio_desc');?></small>">
             </div>
-
-
 
         </div></div>
 
@@ -86,27 +60,24 @@ if (isset($_GET['ok'])) {
                 <option value="0"></option>
                 <?php
                         /*$qstring = "SELECT name as label, id as value FROM deps where id !='0' ;";
-                        $result = mysql_query($qstring);//query the database for entries containing the 
+                        $result = mysql_query($qstring);//query the database for entries containing the
                         while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
                         */
-                        
+
         $stmt = $dbConnection->prepare('SELECT name as label, id as value FROM deps where id !=:n AND status=:s');
 		$stmt->execute(array(':n'=>'0',':s'=>'1'));
-		$res1 = $stmt->fetchAll();                 
-        foreach($res1 as $row) { 
-                        
-                        
+		$res1 = $stmt->fetchAll();
+        foreach($res1 as $row) {
+
 //echo($row['label']);
                             $row['label']=$row['label'];
                             $row['value']=(int)$row['value'];
-
 
                             ?>
 
                             <option value="<?=$row['value']?>"><?=$row['label']?></option>
 
                         <?php
-
 
                         }
 
@@ -115,35 +86,23 @@ if (isset($_GET['ok'])) {
             </select>
         </div>
 
-
-
-
         <div class="col-md-4" style="" id="dsd" data-toggle="popover" data-html="true" data-trigger="manual" data-placement="right" data-content="<small><?=lang('NEW_to_unit_desc');?></small>">
-    
-    
+
     <select data-placeholder="<?=lang('NEW_to_user');?>"  id="users_do" name="unit_id">
     	<option></option>
 
-
 <?php
-                
-                
+
                /* $qstring = "SELECT fio as label, id as value FROM users where status='1' and login !='system' order by fio ASC;";
                 $result = mysql_query($qstring);//query the database for entries containing the term
 				while ($row = mysql_fetch_array($result,MYSQL_ASSOC)){
 				*/
-                
+
         $stmt = $dbConnection->prepare('SELECT fio as label, id as value FROM users where status=:n and login !=:system order by fio ASC');
 		$stmt->execute(array(':n'=>'1',':system'=>'system'));
-		$res1 = $stmt->fetchAll();                 
+		$res1 = $stmt->fetchAll();
         foreach($res1 as $row) {
-                
-                
-                
-                
-                
-                
-                
+
 //echo($row['label']);
                     $row['label']=$row['label'];
                     $row['value']=(int)$row['value'];
@@ -155,24 +114,16 @@ else if (get_user_status_text($row['value']) == "offline") {$s="status-offline-i
 
                 <?php
 
-
                 }
 
                 ?>
     </select>
-            
 
         </div>
 
     </div>
 
-
-
-
 </div>
-
-
-
 
 <div class="control-group" id="for_prio">
     <div class="controls">
@@ -193,14 +144,6 @@ else if (get_user_status_text($row['value']) == "offline") {$s="status-offline-i
                 </div>
             </div></div></div></div>
 <?php
-/*
-
-
-
-
-
-*/
-
 
 if ($CONF['fix_subj'] == "false") {
 ?>
@@ -213,11 +156,9 @@ if ($CONF['fix_subj'] == "false") {
       <input type="text" class="form-control input-sm" name="subj" id="subj" placeholder="<?=lang('NEW_subj');?>" data-toggle="popover" data-html="true" data-trigger="manual" data-placement="right" data-content="<small><?=lang('NEW_subj_msg');?></small>">
     </div>
   </div></div></div>
-<?php } 
+<?php }
 	else if ($CONF['fix_subj'] == "true") {
 ?>
-
-
 
 <div class="control-group" id="for_subj" data-toggle="popover" data-html="true" data-trigger="manual" data-placement="right" data-content="<small><?=lang('NEW_subj_msg');?></small>">
     <div class="controls">
@@ -231,20 +172,17 @@ if ($CONF['fix_subj'] == "false") {
                     $result = mysql_query($qstring);//query the database for entries containing the term
 					while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
 					*/
-					
-					
+
 		$stmt = $dbConnection->prepare('SELECT name FROM subj order by name COLLATE utf8_unicode_ci ASC');
 		$stmt->execute();
-		$res1 = $stmt->fetchAll();                 
+		$res1 = $stmt->fetchAll();
         foreach($res1 as $row) {
-					
-					
+
                         ?>
 
                         <option value="<?=$row['name']?>"><?=$row['name']?></option>
 
                     <?php
-
 
                     }
 
@@ -257,14 +195,7 @@ if ($CONF['fix_subj'] == "false") {
     </div>
 </div>
 
-
 <?php } ?>
-
-
-
-
-
-
 
 <div class="control-group">
     <div class="controls">
@@ -276,13 +207,12 @@ if ($CONF['fix_subj'] == "false") {
         </div>
         <div class="help-block"></div></div></div>
 
-
 <?php if ($CONF['file_uploads'] == "true") { ?>
 
 <div class="control-group">
     <div class="controls">
     <div class="form-group">
-    
+
     <label for="" class="col-sm-2 control-label"><small><?=lang('TICKET_file_add');?>:</small></label>
 
     <div class="col-sm-10">
@@ -296,7 +226,7 @@ if ($CONF['fix_subj'] == "false") {
                     <span><?=lang('TICKET_file_upload')?></span>
                     <input id="filer" type="file" name="files[]" multiple>
                 </span>
-                
+
                 <!--button data-toggle="popover" data-html="true" data-trigger="manual" data-placement="top" data-content="<small><?=lang('upload_not_u')?></small>" type="submit" class="btn btn-primary start btn-xs" id="start_upload">
                     <i class="glyphicon glyphicon-upload"></i>
                     <span><?=lang('TICKET_file_startupload');?></span>
@@ -307,9 +237,7 @@ if ($CONF['fix_subj'] == "false") {
                 </button--><br>
                <small class="text-muted"><?=lang('TICKET_file_upload_msg');?></small>
                 <!-- The global file processing state -->
-                
-                
-                
+
                 <span class="fileupload-process"></span>
             </div>
 
@@ -345,12 +273,7 @@ if ($CONF['fix_subj'] == "false") {
 <input type="hidden" id="file_types" value="<?=$CONF['file_types']?>">
 <input type="hidden" id="file_size" value="<?=$CONF['file_size']?>">
 
-
-
-
-
 </div>
-
 
 </div>
 </div>
@@ -363,26 +286,13 @@ if ($CONF['fix_subj'] == "false") {
 
     <div class="panel panel-success" id="user_info" style="display: block;">
 
-
-
-
-
-
     </div>
     <div id="alert_add">
     </div>
 
-
-
 </div>
 
-
-
 </div>
-
-
-
-
 
 </div>
 
@@ -465,7 +375,6 @@ if ($CONF['fix_subj'] == "false") {
             </tr>
 {% } %}
 </script>
-
 
 <?php
 	}
